@@ -1,6 +1,7 @@
 package com.br.alura.galeria.navigation.graphs
 
 import android.graphics.BitmapFactory
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -11,6 +12,9 @@ import androidx.navigation.compose.composable
 import com.br.alura.galeria.R
 import com.br.alura.galeria.navigation.Destinations
 import com.br.alura.galeria.ui.imageDetail.ImageDetailScreen
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 
 
 fun NavGraphBuilder.imageDetailGraph() {
@@ -32,6 +36,20 @@ fun NavGraphBuilder.imageDetailGraph() {
             mutableStateOf(imageBitmap)
         }
 
+        val image: InputImage = InputImage.fromBitmap(imageBitmap, 0)
+
+        // To use default options:
+        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+
+        labeler.process(image).addOnSuccessListener { labels ->
+            labels.forEach {
+                val labelAndConfidence = "${it.text} - ${it.confidence}"
+                Log.d("ImageDetailScreen", labelAndConfidence)
+            }
+
+            description = labels.map { it.text }.toString()
+
+        }
 
         ImageDetailScreen(
             defaultImage = currentImage,
