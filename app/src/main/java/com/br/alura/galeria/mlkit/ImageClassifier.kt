@@ -19,7 +19,11 @@ class ImageClassifier @Inject constructor(private val context: Context) {
 
         val image = InputImage.fromFilePath(context, Uri.parse(imageUri))
 
-        val labeler = ImageLabeling.getClient(ImageLabelerOptions.DEFAULT_OPTIONS)
+        val options = ImageLabelerOptions.Builder()
+            .setConfidenceThreshold(0.7f)
+            .build()
+
+        val labeler = ImageLabeling.getClient(options)
 
         labeler.process(image)
             .addOnSuccessListener { labels ->
