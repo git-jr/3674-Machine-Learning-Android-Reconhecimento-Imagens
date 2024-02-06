@@ -66,20 +66,42 @@ class SplashViewModel @Inject constructor(
                 val imageUris = imageUriManager.getImageUris()
                 val imagesWithLabels = mutableStateListOf<ImageWithLabels>()
 
+                val imageSize = imageUris.size
+                var imagesAnalyzed = 0
+
                 imageUris.forEach { imageUri ->
-                    imagesWithLabels.add(
-                        ImageWithLabels(
-                            uri = imageUri,
-                            labels = emptyList()
-                        )
+                    imageClassifier.classifyImage(
+                        imageUri = imageUri,
+                        onSuccess = { labels ->
+                            imagesWithLabels.add(
+                                ImageWithLabels(
+                                    uri = imageUri,
+                                    labels = labels
+                                )
+                            )
+                            imagesAnalyzed++
+
+                            if (imagesAnalyzed == imageSize) {
+                                imageUriManager.setImageWithLabels(imagesWithLabels)
+                                _uiState.value = _uiState.value.copy(
+                                    appState = AppState.Loaded,
+                                    route = Route.GALLERY
+                                )
+                            }
+                        },
+                        onFail = {
+                            imagesAnalyzed++
+                            if (imagesAnalyzed == imageSize) {
+                                imageUriManager.setImageWithLabels(imagesWithLabels)
+                                _uiState.value = _uiState.value.copy(
+                                    appState = AppState.Loaded,
+                                    route = Route.GALLERY
+                                )
+                            }
+                        }
                     )
                 }
 
-                imageUriManager.setImageWithLabels(imagesWithLabels)
-                _uiState.value = _uiState.value.copy(
-                    appState = AppState.Loaded,
-                    route = Route.GALLERY
-                )
             }
         }
     }
