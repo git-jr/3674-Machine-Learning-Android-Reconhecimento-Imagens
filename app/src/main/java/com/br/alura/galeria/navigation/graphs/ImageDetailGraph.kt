@@ -1,7 +1,6 @@
 package com.br.alura.galeria.navigation.graphs
 
 import android.graphics.BitmapFactory
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -10,11 +9,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import com.br.alura.galeria.R
+import com.br.alura.galeria.extensions.cleanBrackets
+import com.br.alura.galeria.mlkit.ImageClassifier
 import com.br.alura.galeria.navigation.Destinations
 import com.br.alura.galeria.ui.imageDetail.ImageDetailScreen
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.label.ImageLabeling
-import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 
 
 fun NavGraphBuilder.imageDetailGraph() {
@@ -36,14 +34,23 @@ fun NavGraphBuilder.imageDetailGraph() {
             mutableStateOf(imageBitmap)
         }
 
-        //val image: InputImage = InputImage.fromBitmap(imageBitmap, 0)
 
+        val imageClassifier = ImageClassifier(context)
 
         ImageDetailScreen(
             defaultImage = currentImage,
             description = description,
             onImageChange = {
                 currentImage = it
+                imageClassifier.classifyImage(
+                    imageUri = it.toString(),
+                    onSuccess = { labels ->
+                        description = labels.toString().cleanBrackets()
+                    },
+                    onFail = {
+                        description = "Falha ao classificar imagem"
+                    }
+                )
             }
         )
     }
