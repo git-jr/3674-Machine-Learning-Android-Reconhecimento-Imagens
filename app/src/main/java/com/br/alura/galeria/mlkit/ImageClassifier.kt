@@ -26,7 +26,7 @@ class ImageClassifier @Inject constructor(private val context: Context) {
             .build()
 
         val customModel = LocalModel.Builder()
-            .setAssetFilePath("model.tflite")
+            .setAssetFilePath("custom_model.tflite")
             .build()
 
         val customOptions = CustomImageLabelerOptions.Builder(customModel)
@@ -38,16 +38,11 @@ class ImageClassifier @Inject constructor(private val context: Context) {
         labeler.process(image)
             .addOnSuccessListener { labels ->
 
-                val newLabels: List<String> = context.resources.assets.open("labels.txt")
-                    .bufferedReader()
-                    .readLines()
-
-
                 labels.forEach {
-                    val labelAndConfidence = "${newLabels[it.index].substring(2)} - ${it.confidence}"
+                    val labelAndConfidence = "${it.text.substring(2)} - ${it.confidence}"
                     Log.d("ImageDetailScreen", labelAndConfidence)
                 }
-                onSuccess(labels.map { newLabels[it.index].substring(2) })
+                onSuccess(labels.map { it.text.substring(2) })
             }
             .addOnFailureListener { onFail() }
     }
