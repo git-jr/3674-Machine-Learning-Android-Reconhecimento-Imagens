@@ -45,6 +45,9 @@ class ImageClassifier @Inject constructor(private val context: Context) {
                 onSuccess(labels.map { it.text.substring(2) })
             }
             .addOnFailureListener { onFail() }
+            .addOnCompleteListener {
+                labeler.close()
+            }
     }
 
 }

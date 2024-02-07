@@ -5,6 +5,10 @@ class ImageCategoryRepository {
 
     fun getAvailableGroups(): List<ImageCategory> {
         return listOf(
+            appleGroup,
+            androidGroup,
+            commonMugGroup,
+            aluraMugGroup,
             peoplesGroup,
             placesGroup,
             foodsGroup,
@@ -14,6 +18,33 @@ class ImageCategoryRepository {
         )
     }
 
+    private val appleGroup = ImageCategory(
+        name = "Maça",
+        keyWords = listOf(
+            "Maça"
+        )
+    )
+
+    private val androidGroup = ImageCategory(
+        name = "Android",
+        keyWords = listOf(
+            "Android"
+        )
+    )
+
+    private val commonMugGroup = ImageCategory(
+        name = "Caneca Comum",
+        keyWords = listOf(
+            "Caneca Comum"
+        )
+    )
+
+    private val aluraMugGroup = ImageCategory(
+        name = "Caneca Alura",
+        keyWords = listOf(
+            "Caneca Alura"
+        )
+    )
 
     private val peoplesGroup = ImageCategory(
         name = "Pessoas",
