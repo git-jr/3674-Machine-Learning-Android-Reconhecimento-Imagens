@@ -1,0 +1,4 @@
+0 Android
+1 Maça
+2 Caneca Comum
+3 Caneca Alura

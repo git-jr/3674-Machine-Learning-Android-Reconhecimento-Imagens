@@ -84,5 +84,6 @@ dependencies {
     implementation(libs.navigation.compose)
 
     implementation (libs.image.labeling)
+    implementation (libs.mlkit.image.labeling.custom)
 
 }

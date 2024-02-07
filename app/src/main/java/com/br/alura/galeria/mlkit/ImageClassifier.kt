@@ -3,8 +3,10 @@ package com.br.alura.galeria.mlkit
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import com.google.mlkit.common.model.LocalModel
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.custom.CustomImageLabelerOptions
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import javax.inject.Inject
 
@@ -23,7 +25,15 @@ class ImageClassifier @Inject constructor(private val context: Context) {
             .setConfidenceThreshold(0.7f)
             .build()
 
-        val labeler = ImageLabeling.getClient(options)
+        val customModel = LocalModel.Builder()
+            .setAssetFilePath("model.tflite")
+            .build()
+
+        val customOptions = CustomImageLabelerOptions.Builder(customModel)
+            .setConfidenceThreshold(0.2f)
+            .build()
+
+        val labeler = ImageLabeling.getClient(customOptions)
 
         labeler.process(image)
             .addOnSuccessListener { labels ->
