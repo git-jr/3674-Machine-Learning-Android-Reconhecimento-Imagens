@@ -37,11 +37,17 @@ class ImageClassifier @Inject constructor(private val context: Context) {
 
         labeler.process(image)
             .addOnSuccessListener { labels ->
+
+                val newLabels: List<String> = context.resources.assets.open("labels.txt")
+                    .bufferedReader()
+                    .readLines()
+
+
                 labels.forEach {
-                    val labelAndConfidence = "${it.text} - ${it.confidence}"
+                    val labelAndConfidence = "${newLabels[it.index].substring(2)} - ${it.confidence}"
                     Log.d("ImageDetailScreen", labelAndConfidence)
                 }
-                onSuccess(labels.map { it.text })
+                onSuccess(labels.map { newLabels[it.index].substring(2) })
             }
             .addOnFailureListener { onFail() }
     }
