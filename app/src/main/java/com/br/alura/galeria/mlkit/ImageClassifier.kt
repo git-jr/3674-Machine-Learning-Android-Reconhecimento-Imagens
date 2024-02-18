@@ -33,16 +33,16 @@ class ImageClassifier @Inject constructor(private val context: Context) {
             .setConfidenceThreshold(0.2f)
             .build()
 
-        val labeler = ImageLabeling.getClient(customOptions)
+        val labeler = ImageLabeling.getClient(options)
 
         labeler.process(image)
             .addOnSuccessListener { labels ->
 
                 labels.forEach {
-                    val labelAndConfidence = "${it.text.substring(2)} - ${it.confidence}"
+                    val labelAndConfidence = "${it.text} - ${it.confidence}"
                     Log.d("ImageDetailScreen", labelAndConfidence)
                 }
-                onSuccess(labels.map { it.text.substring(2) })
+                onSuccess(labels.map { it.text})
             }
             .addOnFailureListener { onFail() }
             .addOnCompleteListener {
